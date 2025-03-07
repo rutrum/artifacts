@@ -15,9 +15,14 @@
       buildInputs = with pkgs; [
         just
         jq
+        openapi-generator-cli
       ];
 
       API_URL="https://api.artifactsmmo.com";
+
+      shellHook = ''
+        # source api/artifacts.bash-completion
+      '';
     };
   };
 }

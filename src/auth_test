@@ -1,0 +1,3 @@
+artifacts myCharactersMyCharactersGet | jq .data
+
+echo ""
