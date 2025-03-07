@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+character="$1"
+x_pos="$2"
+y_pos="$3"
+
+response=$(api_request \
+    "/my/$character/action/move" \
+    "{ \"x\": $x_pos, \"y\": $y_pos }")
+
+# get the datetime in unix epoch
+
+# -r is "raw output" which wont quote strings
+iso_expire=$(echo $response | jq -r .data.cooldown.expiration)
+epoch_expire=$(date -d $iso_expire --utc +%s)
+
+echo $epoch_expire
+
+# do I want to build parsers for the different schemas?
+# or at least save them in different locations?
+# why not cache the character details in the data dir

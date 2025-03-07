@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+route=$1
+payload=$2
+
+curl \
+    --request POST \
+    --no-progress-bar \
+    --url "$API_URL$route" \
+    --header "Accept: application/json" \
+    --header "Authorization: Bearer $API_TOKEN" \
+    --header "Content-Type: application/json" \
+    --data "$payload" \
+    2>/dev/null \
+    | tee data/response.json \
+    | jq .
