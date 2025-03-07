@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+# this script will take a list of arguments
+# then it will validate another list of arguments and
+# check that all args are present and will export them
+# as individual variables
+
+is_required_key=1
+required_keys=()
+passed_args=()
+passed_keys=()
+passed_vals=()
+
+for arg in "$@"; do
+    if [[ $arg == "--" ]]; then
+        is_required_key=0
+        continue
+    fi
+
+    if [[ $is_required_key -eq 1 ]]; then
+        required_keys+=("$arg")
+    else 
+        passed_args+=("$arg")
+        if ! [[ "$arg" =~ .= ]]; then
+            echo "Malformed argument: $arg"
+            exit 1
+        fi
+        key=${arg%%=*}
+        val=${arg#*=}
+        passed_keys+=("$key")
+        passed_vals+=("$val")
+    fi
+done
+
+# check if supplied keys are allowed
+for passed_key in "${passed_keys[@]}"; do 
+    is_present=0
+    if [[ "${required_keys[*]}" == *"$passed_key"* ]]; then
+        is_present=1
+    fi
+    if [[ $is_present -eq 0 ]]; then
+        echo "Invalid argument: $passed_key"
+        exit 1
+    fi
+done
+
+# check if required_keys are present
+for required_key in "${required_keys[@]}"; do 
+    is_present=0
+    if [[ "${passed_keys[*]}" == *"$required_key"* ]]; then
+        is_present=1
+    fi
+    if [[ $is_present -eq 0 ]]; then
+        echo "Missing required argument: $required_key"
+        exit 1
+    fi
+done
+
+# all variables are good, now export them as variables
+
+for arg in "${passed_args[@]}"; do 
+    key=${arg%%=*}
+    value=${arg#*=}
+    export $key=$value
+done
+
+# not necessary yet
+
+# check if two arrays have same elements
+function array_sort {
+    echo $1 | tr ',' '\n' | sort
+}
+
+function set_equal {
+    sorted1=$(array_sort $1)
+    echo ${sorted1[@]}
+    sorted2=$(array_sort $2)
+    echo ${sorted2[@]}
+    [[ $sorted1 == $sorted2 ]]
+}
+
+function array_join {
+    echo $(printf "%s," $@)
+}
+
+a1=$(array_join "${passed_keys[*]}")
+a2=$(array_join "${required_args[*]}")
+
+# set_equal $a1 $a2 && echo true || echo false
+

@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 
-character="$1"
-x_pos="$2"
-y_pos="$3"
+. validate_args name x y -- $@
 
-response=$(api_request \
-    "/my/$character/action/move" \
-    "{ \"x\": $x_pos, \"y\": $y_pos }")
+response=$(artifacts moveMyNameActionMovePost \
+    name=$name x==$x y==$y)
 
 # get the datetime in unix epoch
+
+echo $response
 
 # -r is "raw output" which wont quote strings
 iso_expire=$(echo $response | jq -r .data.cooldown.expiration)
 epoch_expire=$(date -d $iso_expire --utc +%s)
 
-echo $epoch_expire
+echo $response | jq -r .data.cooldown.expiration
 
 # do I want to build parsers for the different schemas?
 # or at least save them in different locations?
