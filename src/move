@@ -5,11 +5,7 @@
 response=$(artifacts moveMyNameActionMovePost \
     name=$name x==$x y==$y)
 
-# todo: move this to a function
-if (echo $response | jq -e .error > /dev/null); then
-    echo $response | jq -r .error.message
-    exit 1
-fi
+. check_error $response
 
 echo $response | jq .data.destination > data/destination.json
 echo $response | jq .data.character > data/character.json

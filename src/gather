@@ -2,12 +2,13 @@
 
 . validate_args name -- $@
 
-response=$(artifacts restMyNameActionRestPost \
+response=$(artifacts gatheringMyNameActionGatheringPost \
     name=$name)
 
 . check_error $response
 
 echo $response | jq .data.cooldown > data/cooldown.json
 echo $response | jq .data.character > data/character.json
+echo $response | jq .data.details > data/gather.json
 
-echo $response | jq -r '.data.hp_restored | tostring + " health restored to " + env.name + "."'
+echo $response | jq '.data.details'

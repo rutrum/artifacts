@@ -5,6 +5,8 @@
 response=$(artifacts fightMyNameActionFightPost \
     name=$name)
 
+. check_error $response
+
 echo $response | jq .data.cooldown > data/cooldown.json
 echo $response | jq .data.character > data/character.json
 echo $response | jq .data.fight > data/fight.json
