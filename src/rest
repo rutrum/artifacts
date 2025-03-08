@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+. validate_args name -- $@
+
+response=$(artifacts restMyNameActionRestPost \
+    name=$name)
+
+echo $response | jq . > data/response.json
+echo $response | jq .data.cooldown > data/cooldown.json
+echo $response | jq .data.character > data/character.json
+
+echo $response | jq -r '.data.hp_restored | tostring + " health restored to " + env.name + "."'

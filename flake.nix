@@ -21,7 +21,7 @@
       API_URL="https://api.artifactsmmo.com";
 
       shellHook = ''
-        # source api/artifacts.bash-completion
+        # . api/artifacts.bash-completion
       '';
     };
   };

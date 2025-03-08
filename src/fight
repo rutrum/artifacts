@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+. validate_args name -- $@
+
+response=$(artifacts fightMyNameActionFightPost \
+    name=$name)
+
+echo $response | jq .data.cooldown > data/cooldown.json
+echo $response | jq .data.character > data/character.json
+echo $response | jq .data.fight > data/fight.json
+
+echo $response | jq '.data.fight'

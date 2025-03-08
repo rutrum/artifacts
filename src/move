@@ -5,25 +5,17 @@
 response=$(artifacts moveMyNameActionMovePost \
     name=$name x==$x y==$y)
 
-# get the datetime in unix epoch
-
-echo $response
-
-# -r is "raw output" which wont quote strings
-iso_expire=$(echo $response | jq -r .data.cooldown.expiration)
-epoch_expire=$(date -d $iso_expire --utc +%s)
-
-echo $response | jq -r .data.cooldown.expiration
+# todo: move this to a function
+if (echo $response | jq -e .error > /dev/null); then
+    echo $response | jq -r .error.message
+    exit 1
+fi
 
 echo $response | jq .data.destination > data/destination.json
 echo $response | jq .data.character > data/character.json
 echo $response | jq .data.cooldown > data/cooldown.json
 
-# do I want to build parsers for the different schemas?
-# or at least save them in different locations?
-# why not cache the character details in the data dir
-
 echo $response | jq '.data.character as $char | {
-    cooldown: ($char.cooldown_expiration[:19] | strptime("%Y-%m-%dT%H:%M:%S") | mktime),
-    name: $char.name
+    name: $char.name,
+    cooldown: ($char.cooldown_expiration[:19] | strptime("%Y-%m-%dT%H:%M:%S") | mktime)
 }'

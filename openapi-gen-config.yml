@@ -1,6 +1,11 @@
-generateBashCompletion: true
-scriptName: artifacts
-processMarkdown: true
-hostEnvironmentVariable: API_URL
-apiKeyAuthEnvironmentVariable: API_TOKEN
-curlOptions: "--no-progress-meter --header Authorization:$API_TOKEN"
+inputSpec: https://api.artifactsmmo.com/openapi.json
+generatorName: bash
+outputDir: api
+removeOperationIdPrefix: true
+additionalProperties:
+  generateBashCompletion: true
+  scriptName: artifacts
+  processMarkdown: true
+  hostEnvironmentVariable: API_URL
+  apiKeyAuthEnvironmentVariable: API_TOKEN
+  curlOptions: "--no-progress-meter --header Authorization:$API_TOKEN"

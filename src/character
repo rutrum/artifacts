@@ -5,6 +5,6 @@ case $1 in
         jq '. | with_entries(select(.key | test(".*level.*")))' data/character.json
         ;;
     *)
-        echo "try 'level'"
+        jq '{name, account, level, xp, gold, hp, x, y}' data/character.json
 esac
 
