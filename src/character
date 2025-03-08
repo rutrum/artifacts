@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+case $1 in
+    level)
+        jq '. | with_entries(select(.key | test(".*level.*")))' data/character.json
+        ;;
+    *)
+        echo "try 'level'"
+esac
+
