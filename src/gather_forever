@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+. validate_args name -- $@
+
+function get_cooldown_epoch {
+    jq -r '.expiration[:19] | strptime("%Y-%m-%dT%H:%M:%S") | mktime' data/cooldown.json
+}
+
+function get_current_epoch {
+    date +%s
+}
+
+while :; do
+    if [[ $(get_cooldown_epoch) < $(get_current_epoch) ]]; then
+        # cooldown over
+        gather name=$name
+    else
+        # wait longer
+        # has a bug sometimes
+        # sleep: invalid option -- '1'
+        sleep $(( $(get_cooldown_epoch) - $(get_current_epoch) ))
+    fi
+done
